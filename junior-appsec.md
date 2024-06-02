@@ -104,29 +104,27 @@ Identification allows us recognize **influence aspects** of the threat, while ra
 
 One of the most popular frameworks for threat identification is **STRIDE**:
 
-**S** - Spoofing
-
+**S** - Spoofing\
 Pretending to be as someone or something else.\
 Broken principle: **Authentication**.
 
-**T** - Tampering
-
+**T** - Tampering\
 Unauthorized alteration or modification of data/communications.\
 Broken principle: **Integrity**.
 
-**R** - Repudiation
+**R** - Repudiation\
 Denial by involved party of previously performed actions due to lack of auditing and logging.\
 Broken principle: **Non-repudiation**.
 
-**I** - Information disclosure
+**I** - Information disclosure\
 Unauthorized access or exposure of sensitive data.\
 Broken principle: **Confidentiality**.
 
-**D** - Denial of Service
+**D** - Denial of Service\
 Disruption of system's normal functioning.\
 Broken principle: **Availability**.
 
-**E**.- Escalation of privilege
+**E**.- Escalation of privilege\
 Allowing entity to do something, what it shouldn't have permission for.\
 Broken principle: **Authorization**.
 
@@ -137,10 +135,10 @@ The sum of the scores in all categories is **total risk score**.
 How big the potential damage would be?
 
 **R** - Reproducibility\
-How easy is it to reproduce this attack?
+How easy is to reproduce this attack?
 
 **E** - Exploitability\
-How hard is it to use this vulnerability?
+How hard is to use this vulnerability?
 
 **A** - Affected Users\
 How many users would be affected?
@@ -316,8 +314,8 @@ It is fundamental security mechanism in **Spring Security**:
 public class SecurityConfig {  
   @Bean  
   public SecurityFilterChain secure(HttpSecurity http) throws Exception {  
-        return http.authorizeHttpRequests(authorize -> authorize  
-				.requestMatchers("/user/**").hasRole("USER")  
+        return http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/user/**").hasRole("USER")  
                 .requestMatchers("/admin/**").hasRole("ADMIN")  
                 .anyRequest()  
                 .authenticated()  
@@ -421,9 +419,8 @@ Tools like [OWASP Netryx Memory]() allow you to allocate memory segments and sto
 
 ## Testing
 ### Static Application Security Testing (SAST)
-SAST can help you to identify security issues early during the development. 
-Usually we divide
-**Manual Source Code Review** is also related to SAST and **shouldn't be neglected**, and usage of **SCA** during development is **preferred**.
+SAST can help you to identify security issues early during the development.
+**Manual Source Code Review** is also related to SAST and **shouldn't be neglected** with usage of **SCA** during development is **preferred**.
 
 
 [SonarQube]() and [Checkmarx]() are prime examples of SCA for Java. Integrating SCA during **development** cycle will increase the qualification of developer in the security field, cause after getting the report from SCA he needs to understand the vulnerability to be able to fix it. Most of SCAs include short descriptions of found threats.
