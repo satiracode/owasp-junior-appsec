@@ -38,30 +38,29 @@ We need clarify **security requirements** separately from **functional requireme
 
 Good security requirement follows **SMART** principle:
 
-**S** - Specific
+**S** - Specific\
 Requirement shouldn't be complex and too abroad, but **exact** and **clear**.
 
-**M** - Measurable
+**M** - Measurable\
 There should be a clear way to **test** if this requirement was met or not.
 
-**A** - Achievable
+**A** - Achievable\
 Developers should have a **clear** understanding of **actions** they need to take in order to meet the requirement.
 
-**R** - Relevant
+**R** - Relevant\
 Requirement should ensure it addresses **actual** risks and provide **meaningful** protection, avoiding measures, that don't add values.
 
-**T** - Time-bound
+**T** - Time-bound\
 There should be a **clear timeframe** for implementation of this security requirement.
 ___
 One of the ways to build security requirements are **abuser stories**.
 Main idea is in watching at application in malicious actor's point of view, trying to abuse application.
 
-**Example**:
+**Example**:\
 *Abuser*:  I want to brute users' passwords to get access to the account.
 
 *Security requirements*: 
 1. Rate limit authorization requests to 5 requests per minute. Deadline:  3 days.
-
 2. Implement MFA (Multi-Factor authorization) via user's email. Deadline: 30 days.
 
 ## Design
