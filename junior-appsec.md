@@ -60,11 +60,9 @@ Main idea is in watching at application in malicious actor's point of view, tryi
 2. Implement MFA (Multi-Factor authorization) via user's email. Deadline: 30 days.
 
 ## Design
-Our checklist:
-1. Include security requirements, gathered from previous phase.
-2. Apply secure design principles
-3. Model threats and define mitigation measures
-4. Select templates and frameworks to ensure security.
+Now we need to use our security requirements, gathered from previous phase and apply secure design principles.
+For that purpose we need to model threats and define mitigation measures as well as select templates and frameworks that allow us to ensure security.
+
 
 ### Core Secure Design Principles
 #### Use Least Privilege Principle
@@ -96,8 +94,8 @@ Security **shouldn't** rely on a **single** layer. It should involve using multi
 For instance, an **Intrusion Detection System** (IDS) and **Web Application Firewall** (WAF) can be deployed as additional layers to protect network and application from different types of attacks. [OWASP Netryx]()'s IDS can help you in deep analysis of **Netty** based web application traffic in a reactive way.
 
 ### Threat Modeling
-Threat modeling includes its identification and rating.
-Identification allows us recognize **influence aspects** of the threat, while rating helps us to calculate its **severity**.
+Threat modeling includes its identification and rating.\
+**Identification** to recognize **influence aspects** of the threat, while **rating** to calculate its **severity**.
 
 One of the most popular frameworks for threat identification is **STRIDE**:
 
@@ -154,11 +152,11 @@ At this step we must ensure our code is built on **Secure Coding** principles to
 **Don't trust user input!**\
 It's important to check both the **syntax** of submitted structured fields like **phone numbers** and **email addresses**, with their **semantics**, such as ensuring that a **quantity** is above **0**, or that a **username**'s length is less than **64** characters.
 
-Make sure if you validate input via **Regex** it is not vulnerable to **ReDoS**. Always set a **time limit** for regex execution.
+Make sure if you validate input via **Regex** it is not vulnerable to **ReDoS** attacks. Always set a **time limit** for regex execution.
 
 Improper or absent input validation is the reason of nearly 80% most popular web application vulnerabilities, including:
 * **SQL Injection**
-*  **XSS Injection**
+* **XSS Injection**
 * **Path Traversal Attack**
 
 #### SQL Injection
@@ -288,20 +286,21 @@ You can use security frameworks for input validation:
 * [OWASP ESAPI]()* *JavaEE only*
 
 ### Access control
-Access control plays key role in the security of the application and according to [OWASP Top 10](https://owasp.org/Top10/), **broken access control** is one of the most popular security issues.
+Access control plays a key role in the security of the application and according to [OWASP Top 10](https://owasp.org/Top10/), **broken access control** is one of the most popular security issues.
 
 #### Mandatory Access Control (MAC)
 MAC is system-enforced access control, that uses clearance and labels to control access.
 It assigns **security levels** to users and resources and only allows access, whether these levels **match**.
 
-Security level for users shows their level of trust; for data it indicates how sensitive is it. For instance classifications in government include: **TOP SECRET**, **SECRET**, **CONFIDENTIAL**, and **UNCLASSIFIED**.
+Security level for users shows their level of trust; for data it indicates how sensitive is it. For instance, classifications in government include: **TOP SECRET**, **SECRET**, **CONFIDENTIAL**, and **UNCLASSIFIED**.
 
 #### Discretionary Access Control (DAC)
-DAC is a security mechanism, where the **resource owner** defines who can access its resource.
-It often uses **ACL**s  to specify which users or groups have access with inheritance enabled.
+DAC is a security mechanism, where a **resource owner** defines who can access it.
+In the DAC every resource (file, catalogue etc.) contains access attributes, that define who can read/write or interact with it.
 
+A prime example of DAC you can see in the **Unix filesystem**.
 #### Role-Based Access Control (RBAC)
-This is flexible approach to build access control system, where **permissions** to users or services are  assigned based on their **role**.
+This is flexible approach to build access control system, where **permissions** to users or services are assigned based on their **role**.
 
 It is fundamental security mechanism in **Spring Security**:
 
@@ -338,8 +337,7 @@ public void supportMethod() {
 ___
 
 #### Session Management
-If you use **Session** based authentication, make sure after successful authorization you drop and create new Session to make **previous** session id **invalid**. In other case your are vulnerable to **Session Fixation** attacks:
-
+If you use Session based authentication, make sure after successfull authorization previous session drops and becomes invalid while creating a fresh one with **unique session id**. There after, you are not vulnerable to **Session Fixation** attacks:
 ```java
 @Bean  
 public SecurityFilterChain secure(HttpSecurity http) throws Exception {  
@@ -362,7 +360,7 @@ Most time **1** CSRF Token **per session** is enough, but the best practice is t
 ####
 
 ### Error handling
-Improper error handling may give malicious users data about inner structure of application that is considered as **information disclosure**.
+Improper error handling may give bad actors a hint of inner works of application that is considered as **information disclosure**.
 
 Use centralized exception handler and make sure:
 * You **don't** include **package names** or **stack trace** into error messages.
@@ -408,23 +406,22 @@ Never hardcode **sensitive** data in the code and ensure data transmitted over t
 
 Passwords should be not encrypted, but **hashed** with salt. It is important to use secure random algorithm, such as **java.security.SecureRandom** for generating crypto sequences. 
 
-Use only **slow** hashing algorithms for passwords: Argon2id, SCrypt and BCrypt. Algorithms like SHA-256 are named **fast** and **should not** be used for hashing **sensitive** data, but are great to ensure **integrity** of data. 
+Use only **slow** hashing algorithms for passwords: Argon2id, SCrypt and BCrypt. Algorithms like SHA-256 are named **fast** and **should not** be used for hashing **sensitive** data, but are great to ensure **integrity** of it. 
 
-**Never** store your password or any other sensitive data (like private keys) as a **String**, use **char[]** or **byte[]** instead and clear them (e.q fill with **zeroes**) as soon, as you complete working with them. This will help to protect against **Data in Use attacks**.
+**Never** store your password or any other sensitive data (like private keys) as a **String**, use **char[]** or **byte[]** instead and clear them (e.g fill with **zeroes**) as soon, as you complete working with them. This will help to protect against **Data in Use attacks**.
 
 Tools like [OWASP Netryx Memory]() allow you to allocate memory segments and store data there in an obfuscated way, making sure it will never be leaked.
 
 ## Testing
 ### Static Application Security Testing (SAST)
 SAST can help you to identify security issues early during the development.
-**Manual Source Code Review** is also related to SAST and **shouldn't be neglected** with usage of **SCA** during development is **preferred**.
-
+**Manual Source Code Review** and **Automated Static Code Analyzer** (SCA) both are types of SAST, that should be used in tandem, where SCA is used directly **during the development**.
 
 [SonarQube]() and [Checkmarx]() are prime examples of SCA for Java. Integrating SCA during **development** cycle will increase the qualification of developer in the security field, cause after getting the report from SCA he needs to understand the vulnerability to be able to fix it. Most of SCAs include short descriptions of found threats.
 
 ### Dynamic Application Security Testing (DAST)
-DAST is a security testing methodology, that analyzes web applications in running state.
-SAST is **White Box** testing, while DAST is **Black Box**  testing, simulating how an attacker might interact with the application.
+DAST is a security testing methodology, that analyzes web applications in the running state.
+SAST is a **white box** testing, while DAST is a **black box** testing, that simulates how an attacker might interact with the application.
 
 Tools like [OWASP ZAP]() and [Burp Suite]() are popular choice for DAST, allowing to run various types of attacks to find potential weaknesses and fix them, before they can be exploited by malicious actor.
 
@@ -432,7 +429,6 @@ Tools like [OWASP ZAP]() and [Burp Suite]() are popular choice for DAST, allowin
 ### Integrity of packages
 ### Monitoring
 ### Updating dependencies
-### Penetration testing
 
 # Recommended to read
 [OWASP Cheatsheet]()\
