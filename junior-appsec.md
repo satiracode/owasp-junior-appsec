@@ -6,21 +6,17 @@ In the face of increasing cyberattacks, application security is becoming critica
 ### What "Secure Application" means?
 When we say **application is secure**, it means that application ensures 3 core security principles of its protected resources named **CIA Triad**:
 
-**C** - Confidentiality
-
+**C** - Confidentiality\
 Only authorized entities have access to specified resource or information. 
 
-**I** - Integrity
-
+**I** - Integrity\
 Data transferred between users and systems remain unchanged from the source to the destination. 
 
-**A** - Availability
-
+**A** - Availability\
 In the event of failures or attacks, data and services are continuously available to authorized users.
 ___
 
-While CIA Triad forms the foundation of security principles, true security is not a one-time effort.
-
+While CIA Triad forms the foundation of security principles, true security is not a one-time effort.\
 Security is an **ongoing** process, and core role of AppSec is to **ensure security on every stage of software development lifecycle (SDLC)**.
 
 # Security in SDLC
@@ -84,7 +80,8 @@ You should always **authenticate** and **authorize** entity and check if it has 
 #### Secure By Default
 Security should be the foundation of your system and must be built on solid and proven principles.
 
-**Don't** rely on **security through obscurity**. Security of the system should **not** depend on the fact, that its details are unknown to attackers.
+**Don't** rely on **security through obscurity**.\
+Security of the system should **not** depend on the fact, that its details are unknown to attackers.
 
 For instance, if your web server is **Netty** based, [OWASP Netryx Armor](https://github.com/OWASP/www-project-netryx) security framework can configure your server to protect you from HTTP/2 0day attacks, DoS Attacks and applies browser security policies to responses out of box.
 
