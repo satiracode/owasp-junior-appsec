@@ -29,13 +29,16 @@ Quickly identifying threats significantly reduces the cost of mitigation, preven
 
 ![Cost of fixing vulnerability](assets/cost.png)
 
+As we see, identification at deployment and maintenance phases are most expensive.\
+To identify threats faster, we should try to use some structured security approaches at each phase of SDLC to minimize risk of costly vulnerabilities.
+
 ## Requirements
 We need clarify **security requirements** separately from **functional requirements**. They define what application should do to **stay secure** and shouldn't do to **elevate threats**.
 
 Good security requirement follows **SMART** principle:
 
 ![](assets/smart.png)
-___
+
 One of the ways to build security requirements are **abuser stories**.
 Main idea is in watching at application in malicious actor's point of view, trying to abuse application.
 
@@ -85,6 +88,7 @@ Threat modeling includes its identification and rating.\
 **Identification** to recognize **influence aspects** of the threat, while **rating** to calculate its **severity**.
 
 One of the most popular frameworks for threat identification is **STRIDE**:
+
 ![](assets/stride.png)
 
 Now we can calculate the risk by using **DREAD** framework. Each category in the model is scored from 0 to 10. 
