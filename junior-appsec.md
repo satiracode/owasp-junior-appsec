@@ -34,20 +34,7 @@ We need clarify **security requirements** separately from **functional requireme
 
 Good security requirement follows **SMART** principle:
 
-**S** - Specific\
-Requirement shouldn't be complex and too abroad, but **exact** and **clear**.
-
-**M** - Measurable\
-There should be a clear way to **test** if this requirement was met or not.
-
-**A** - Achievable\
-Developers should have a **clear** understanding of **actions** they need to take in order to meet the requirement.
-
-**R** - Relevant\
-Requirement should ensure it addresses **actual** risks and provide **meaningful** protection, avoiding measures, that don't add values.
-
-**T** - Time-bound\
-There should be a **clear timeframe** for implementation of this security requirement.
+![](assets/smart.png)
 ___
 One of the ways to build security requirements are **abuser stories**.
 Main idea is in watching at application in malicious actor's point of view, trying to abuse application.
@@ -98,52 +85,20 @@ Threat modeling includes its identification and rating.\
 **Identification** to recognize **influence aspects** of the threat, while **rating** to calculate its **severity**.
 
 One of the most popular frameworks for threat identification is **STRIDE**:
-
-**S** - Spoofing\
-Pretending to be as someone or something else.\
-Broken principle: **Authentication**.
-
-**T** - Tampering\
-Unauthorized alteration or modification of data/communications.\
-Broken principle: **Integrity**.
-
-**R** - Repudiation\
-Denial by involved party of previously performed actions due to lack of auditing and logging.\
-Broken principle: **Non-repudiation**.
-
-**I** - Information disclosure\
-Unauthorized access or exposure of sensitive data.\
-Broken principle: **Confidentiality**.
-
-**D** - Denial of Service\
-Disruption of system's normal functioning.\
-Broken principle: **Availability**.
-
-**E**.- Escalation of privilege\
-Allowing entity to do something, what it shouldn't have permission for.\
-Broken principle: **Authorization**.
+![](assets/stride.png)
 
 Now we can calculate the risk by using **DREAD** framework. Each category in the model is scored from 0 to 10. 
 The sum of the scores in all categories is **total risk score**.
 
-**D** - Damage potential \
-How big the potential damage would be?
-
-**R** - Reproducibility\
-How easy is to reproduce this attack?
-
-**E** - Exploitability\
-How hard is to use this vulnerability?
-
-**A** - Affected Users\
-How many users would be affected?
-
-**D** - Discoverability\
-How fast can attacker discover the vulnerability?
+![](assets/dread.png)
 
 Example of building STRIDE and DREAD models for **SQL Injection**:
 
-**[img]**
+![](assets/sqli.png)
+Our **DREAD** score for SQL Injection is: 9+8+10+10+8 = **45** out of **50**, that shows very big severity of this vulnerability.
+
+Take attention, that during classifying the threat through **STRIDE**, we not only handled how to fix SQL Injection, but also covered
+potentially vulnerable parts of the system, that allowed us to increase overall security of our system. 
 
 ## Development
 At this step we must ensure our code is built on **Secure Coding** principles to be resilient against potential vulnerabilities and threats:
