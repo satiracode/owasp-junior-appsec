@@ -99,6 +99,7 @@ The sum of the scores in all categories is **total risk score**.
 Example of building STRIDE and DREAD models for **SQL Injection**:
 
 ![](assets/sqli.png)
+
 Our **DREAD** score for SQL Injection is: 9+8+10+10+8 = **45** out of **50**, that shows very big severity of this vulnerability.
 
 Take attention, that during classifying the threat through **STRIDE**, we not only handled how to fix SQL Injection, but also covered
@@ -361,7 +362,11 @@ public class GoodExceptionHandler {
 Include all system thrown exceptions and make sure they are handled properly.
 
 ### Cryptography
-Never hardcode **sensitive** data in the code and ensure data transmitted over the network is **encrypted** to prevent interception, such as **Man In The Middle** attacks. Don't use **legacy** encryption algorithms, like **DES** to protect confidentiality of your data. Instead, use modern and **efficient** encryption algorithms like **AES-GCM** and **ChaCha20-Poly1305**.
+Never hardcode **sensitive** data in the code and ensure data transmitted over the network is **encrypted** to prevent interception, such as **Man In The Middle (MITM)** attacks:
+
+![](assets/mitm.png)
+
+Don't use **legacy** encryption algorithms, like **DES** to protect confidentiality of your data. Instead, use modern and **efficient** encryption algorithms like **AES-GCM** and **ChaCha20-Poly1305**.
 
 Passwords should be not encrypted, but **hashed** with salt. It is important to use secure random algorithm, such as **java.security.SecureRandom** for generating crypto sequences. 
 
