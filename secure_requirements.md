@@ -63,31 +63,38 @@ and **Secondary Losses** (reputation, litigation losses)
 
 Sounds a bit hard, right? As **FAIR** is just **methodology**, not **framework**, there are no concrete ways of **how** you
 should calculate risks.\
-But using simple **Threat Modeling** techniques such as **STRIDE** and **DREAD** we can cover most of these steps:
+But using simple **Threat Modeling** techniques we can cover most of these steps:
 
-### STRIDE & DREAD
-Threat modeling includes its **identification** and **rating**.
-Identifying threats helps us understand which security aspects are at risk, while rating them ensures we prioritize our efforts in a right way.
+### Threat Modeling
+Threat modeling allows us to **identify** and **rate** threats.
+Identifying threats helps us to understand which security aspects are at risk, while rating ensures we prioritize them in a right way.
 
 To properly identify threat we will use **STRIDE** framework:
 
 ![](assets/stride.png)
 
-Now we can calculate the risk by using **DREAD** framework. Each category in the model is scored from 0 to 10.
-The sum of the scores in all categories is **total risk score**. Maximum risk score is **50**.
+So, it allows us to classify a threat in one or more of 6 categories, defining which security aspects are affected.
+After we identified a threat we can calculate the risk by using **DREAD** framework:
 
 ![](assets/dread.png)
 
-Let's create a STRIDE and DREAD analysis for **SQL Injection** as an example:
+Each category in the model is scored from 0 to 10.
+The sum of the scores in all categories is **total risk score**. Maximum risk score is **50**.
+As an example let's create a STRIDE and DREAD analysis for **SQL Injection**:
 
 ![](assets/sqli.png)
+
+Thus, the total risk score for SQL Injection is *9 + 8 + 10 + 10 + 8 =* **45**,
 ___
 After this, we can use **Security & Abuser** stories, **STRIDE** and **DREAD** framework
 to structure our approach with **FAIR** methodology:
 
 #### › Threat and Critical Asset identification
 Using **Security & Abuser** stories, we can find critical assets.
-For instance, if we talk about **SQL Injection**, it means that **user database** is our critical asset.
+
+- As a developer, I want all user input to be validated to prevent SQL Injection in database.
+
+From this security story we see, that **database** is our critical asset.\
 To identify the influence vectors of the threat, we will use **STRIDE**.
 
 #### › Contact Frequency (СF) assessment
@@ -97,7 +104,7 @@ the frequency is actually how often will user interact with the database.
 
 #### › Calculating Probability of Action (PoA)
 We can use **Reproducibility** and **Exploitability** scores from **DREAD** framework.
-For instance, for SQL Injection **Reproducibility** is **9**, for **Exploitability** is **10**.
+For instance, for SQL Injection **Reproducibility** score is **9** and **Exploitability** score is **10**.
 
 Then our **PoA** would be *(9 + 10) / 20* = **0.95**
 
@@ -107,7 +114,7 @@ For example, if there are 100 user-side interactions with database, then for SQL
 **TEF** = *100 x 0.95* = **95** threat events per day.
 
 #### › Vulnerability (Vuln) assessment
-For final **Vulnerability** assessment we can use final **DREAD** score.\
+For **Vulnerability** assessment we can use final **DREAD** score.\
 **SQL Injection**'s DREAD score is *9 + 8 + 10 + 10 + 8* = 45/50, or **0.99**.
 
 #### › Loss Event Frequency (LEF)
@@ -137,10 +144,10 @@ Thus, Total Loss Magnitude is *90.000$ + 80.000$* = **170.000$**
 #### › Overall Risk
 *Potential Overall Risk = LEF(94) x LM(90.000)* = **8.460.000$ per day**
 ___
-By using **STRIDE**, **DREAD**, **Security & Abuser Stories**, and **FAIR**, we learnt how to develop strong security requirements.\
+By using **STRIDE**, **DREAD**, **Security & Abuser Stories**, and **FAIR**, we learned how to develop strong security requirements.\
 The great thing about **FAIR** is that in the end it translates these risks into **financial** terms, making it much easier for **management** to understand the importance of each security measure. This is especially helpful since it's often **challenging** to convey the significance of security risks to **top executives**.
 
-Now that we have our security requirements and know their financial impacts, we can ensure we don't miss anything by using a **Secure Requirements Traceability Matrix (SRTM)**.
+Now after we have our security requirements and know their financial impacts, we can ensure we don't miss anything by using a **Secure Requirements Traceability Matrix (SRTM)**.
 
 ## Security Requirements Traceability Matrix (SRTM)
 **SRTM** is a detailed document that links security requirements to their implementation and testing.
