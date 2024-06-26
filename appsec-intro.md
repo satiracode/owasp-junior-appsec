@@ -11,18 +11,17 @@
 ~ 1500 words
 * SMART principle
 * Abuser & Security stories. Examples.
+* FAIR model with STRIDE & DREAD
 * Security requirements traceability matrix (SRTM). Examples.
 
 # Article 3: Security in Design:
 ~ 2000 words
 * Least privilege principle
+* Fail Securely 
 * Zero Trust
 * Secure by Default
 * Defense in Depth
 * Auditing & Logging
-* Threat Modeling
-    * STRIDE
-    * DREAD
 
 # Article 4: Security in Development:
 ~ 3000 words
@@ -43,7 +42,7 @@
   * TLS. Secure cipher-suites.
 * Keep It Simple Stupid (KISS)
 * Intro to SAST:
-  * SonarQube and IntelliJ Idea
+  * SonarQube with IntelliJ Idea
   * Checkmarx.
 
 # Article 5: Security in Testing
