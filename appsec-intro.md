@@ -17,9 +17,8 @@
 # Article 3: Security in Design:
 ~ 2000 words
 * Least privilege principle
-* Fail Securely 
 * Zero Trust
-* Secure by Default
+* Fail Securely
 * Defense in Depth
 * Auditing & Logging
 
