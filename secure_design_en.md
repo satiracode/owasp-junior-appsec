@@ -215,10 +215,10 @@ Below, we define 3 conditions under which we should apply it:\
    This is in the area of **OPSEC** competence. But as a rule of thumb, the principles we know such as the **Minimum Privilege Principle** and encryption of transmitted data are applied.
 
 #### Contain and exclude behaviours
-This principle helps to control and restrict the behaviour of systems and their components to prevent undesirable actions and minimise the harm caused by them. Roughly speaking, our goal is to control the actions of attackers, even if they were able to penetrate the system. We must limit **what** they can do and **where** they can get to:
+This principle helps to control and restrict the behaviour of systems and their components to prevent undesirable actions and minimise the harm caused by them. Our goal is to control the actions of attackers, even if they were able to penetrate the system. We must limit **what** they can do and **where** they can get to:
 
 1. **Exclude unacceptable behaviour**:\
-   We can define the kinds of behaviours that **should not** happen. Let's take a trivial example from the CRM of a typical shop. If the shop's opening hours are from 08:00-18:00, then logically, we should prohibit any logins to the panel outside of this period.
+   We can define the kinds of behaviours that **should not** happen. Let's take a trivial example from the CRM of a typical company who has standard working hours. If the company's opening hours are from 08:00-18:00, then logically, we could prohibit any logins to the system outside of this period.
 
 2. **Content of suspicious behaviour**:\
    The principle is insanely simple. If any suspicious behaviour is detected, we should create an isolated environment where we can analyse it. For example, if a suspicious file is downloaded, we can run it in a separate sandbox to analyse it.
@@ -239,19 +239,19 @@ Different OS and architectures may handle memory differently, making it difficul
 Also, you can use different Cloud providers so that if one is unavailable, some of the services are still available when deployed in another provider.
 
 #### Maintain redundancy
-Remember the third principle of the CIA triad - **availability** that we talked about in the first article? That's the principle - redundancy helps avoid system failures and malfunctions. If one component fails, another component can take over its functions, ensuring system continuity.
+Remember the third principle of the CIA triad - **availability** that we talked about in the first article? Availability ensures that all systems and users have access to what they require and redundancy helps avoid system downtime due to failures and malfunctions. If one component fails, another component can take over its functions, ensuring system continuity.
 
 We often apply redundancy when we want to **balance** activity on a server. Designing a component of the system to support **horizontal scaling** will simply allow a second such component to be started if one component fails, or is disabled due to failure.
 
 #### Manage resources adaptively
 We want our system to be flexible, don't we? If so, then the environment in which it operates should **adapt** to real-time changes. It should react quickly to changes and minimise the effects of disruptions including failures.
 
-For example, in the case of threat detection, firewall and security rules can change in response to intrusions. Or let's not go too far, by taking the example of trivial authorisation - if it is noticed that a user tries to log in from an unknown location, even if the login password is correct, we need to authenticate him additionally (e.g. via email).
+For example, in the case of threat detection, firewall and security rules can change in response to intrusions or anomalous behavior. For example, if it is noticed that a user tries to log in from an unknown location, even if the login user name and password is correct, we need to authenticate them additionally (e.g. via email) because their abnormal location prompted our controls to altert us of this behavior.
 
 #### Determine current reliability
 Do not rely on the stability of components over time, but rather check their current reliability on a regular basis. This includes periodic verification, continuous monitoring to detect and remediate potentially malicious behaviour in time.
 
-It's also good practice to pen-test your system regularly to make sure it's secure over time. One of our favourites for pentesting is **OWASP ZAP**. We'll learn how to pen-test systems effectively in the **Security in Testing** article.
+It's also good practice to conduct penetration tests of your system regularly to make sure they withstand current threats and stay secure over time. One of our favourites for pentesting is **OWASP ZAP**. We'll learn how to pen test systems effectively in the **Security in Testing** article.
 
 #### Modify or disrupt the attack surface
 In the case where an attacker uses an attack surface (conventionally attacking one of our services), we can think of ways to make it harder for them to succeed.
@@ -261,7 +261,7 @@ This includes:
 2. Moving important data and services between different physical or virtual locations.
 3. Creating false targets, such as honeypots.
 
-As an example, let's imagine that an attacker has launched a DDoS attack. One of the most effective methodologies that I believe is not just filtering traffic, but using the **IP Hopper** mechanism.
+For example, let's imagine that an attacker has launched a DDoS attack. One of the most effective methodologies that I believe is not just filtering traffic, but using the **IP Hopper** mechanism.
 According to this methodology, all legitimate traffic should be redirected to a server that is not under attack, while illegitimate traffic literally attacks *emptiness*.
 
 #### Make the effects of deception and unpredictability transparent to the user
@@ -274,14 +274,14 @@ In this article, we have reviewed key principles of secure design and methods fo
 
 We walked through the eight principles of secure design:
 1. Principle of least privilege - Systems and its components should have as many rights as they need and no more.
-2. Zero Trust Principle - Don't trust services and users, even if they are inside the corporate network.
+2. Zero Trust Principle - Don't trust services and users, even if they are inside the corporate network, without verification.
 3. Fail Securely - Handle failures in such a way that they do not give away internal system information.
 4. Defence in Depth - Security cannot be built from a single layer.
 5. Auditing and Logging - Auditing, logging of security events, and real-time error tracking.
 6. Secure by Default - Systems should not require additional configuration to be secure.
 7. Open Design - The security of the system should not depend on the secrecy of its implementation.
-8. KISS - Don't overcomplicate the system, that way we will only complicate our lives rather than improve security.
-
+8. KISS - Don't overcomplicate the system, making it harder to defend.
+   
 Learned strategic principles of sustainability:
 
 1. Focus on shared critical resources
