@@ -1,3 +1,4 @@
+![](assets/secure_coding.png)
 # Secure Coding Principles
 
 After exploring how to create a secure and persistent application architecture in [Secure & Resilient Design](https://dev.to/owasp/secure-and-resilient-design-2f1k) article, we have learned how to create a solid foundation for our system.
